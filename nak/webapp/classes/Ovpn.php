@@ -47,11 +47,16 @@ class Ovpn {
         }
     }
 
+    public function sanitizeConfig($path) {
+        system("/nak/bin/sanitize_ovpn.sh " . $path);
+    }
+
     public function handleUpload() {
         if (isset($_FILES['vpnfile'])) {
             $name = $_FILES['vpnfile']['name'];
             $tmp_file = $_FILES['vpnfile']['tmp_name'];
-            if (preg_match('/^[a-zA-Z0-9\ -_\.]+.ovpn/', $name)) {        
+            if (preg_match('/^[a-zA-Z0-9\ -_\.]+.ovpn/', $name)) {
+                $this->sanitizeConfig($tmp_file);
                 $destination = $this->ovpn_root . '/upload/' . $name;
                 move_uploaded_file($tmp_file, $destination);
                 return true;
