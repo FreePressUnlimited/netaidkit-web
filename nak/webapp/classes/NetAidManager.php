@@ -250,6 +250,6 @@ class NetAidManager
     }
 
     static public function release_info() {
-        return file_get_contents('/etc/nak-release');
+        return file_get_contents('/tmp/nak-release');
     }
 }
