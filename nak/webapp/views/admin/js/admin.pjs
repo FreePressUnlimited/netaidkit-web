@@ -6,6 +6,14 @@
        var e=new RegExp("(<("+black+")[^>]*>.*</\\2>|(?!<[/]?("+white+")(\\s[^<]*>|[/]>|>))<[^<>]*>|(?!<[^<>\\s]+)\\s[^</>]+(?=[/>]))", "gi");
        return this.replace(e,'');
     }
+    
+    function stripHTML(dirtyString) {
+      var container = document.createElement('div');
+      var text = document.createTextNode(dirtyString);
+      container.appendChild(text);
+      return container.innerHTML; // innerHTML will be a xss safe string
+    }
+    
     // get general translation strings
     content={};
     function htmlDecode(input) {
@@ -145,7 +153,7 @@
           data.result.forEach( function(entry){
             i++;
             entry.strength = Math.round(entry.quality/entry.quality_max*1000)/10;
-            html += '<tr><td><input type="radio" name="ssid" class="wifi-list-radiobtn" encryption="'+entry.encryption.sanitize()+'" id="optionsRadios'+i+'" value="'+entry.ssid.sanitize()+'" data-toggle="radio"><span class="fui-'+(entry.encryption!='none'?'lock':'eye')+'"></span> '+entry.ssid.sanitize()+'</td>';
+            html += '<tr><td><input type="radio" name="ssid" class="wifi-list-radiobtn" encryption="'+entry.encryption.sanitize()+'" id="optionsRadios'+i+'" value="'+stripHTML(entry.ssid.sanitize())+'" data-toggle="radio"><span class="fui-'+(entry.encryption!='none'?'lock':'eye')+'"></span> '+stripHTML(entry.ssid.sanitize())+'</td>';
             html += '<td style="text-align: right;"><div class="meter'+(entry.strength<50?(entry.strength<25?' red':' orange'):'')+'"><span style="width: '+entry.strength+'%"></span></div>';
             html += '</td></tr>';
           });
